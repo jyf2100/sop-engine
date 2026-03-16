@@ -20,7 +20,7 @@
 | M6 | 基础执行器 | REQ-0001-011, 012, 013 | Script/Agent/Condition 可用 | done |
 | M7 | 审批执行器 | REQ-0001-014 | Human 节点可用 | done |
 | M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | done |
-| M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | todo |
+| M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | done |
 | M10 | 执行 API | REQ-0001-017 | 执行控制可用 | todo |
 | M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | todo |
 | M12 | 前端骨架 | REQ-0001-020 | 前端启动成功 | todo |
@@ -75,7 +75,7 @@
 | REQ-0001-013 | PRD-0001 §13 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
 | REQ-0001-014 | PRD-0001 §14 | v1-m7-human-executor | `test_human_executor.py` | — | 181 tests passed | done |
 | REQ-0001-015 | PRD-0001 §15 | v1-m8-agent-api | `test_agent_api.py` | — | 201 tests passed | done |
-| REQ-0001-016 | PRD-0001 §16 | v1-m9-template-api | — | — | — | todo |
+| REQ-0001-016 | PRD-0001 §16 | v1-m9-template-api | `test_template_api.py` | — | 213 tests passed | done |
 | REQ-0001-017 | PRD-0001 §17 | v1-m10-execution-api | — | — | — | todo |
 | REQ-0001-018 | PRD-0001 §18 | v1-m11-approval-api | — | — | — | todo |
 | REQ-0001-019 | PRD-0001 §19 | v1-m11-approval-api | — | — | — | todo |
