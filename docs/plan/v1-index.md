@@ -21,7 +21,7 @@
 | M7 | 审批执行器 | REQ-0001-014 | Human 节点可用 | done |
 | M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | done |
 | M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | done |
-| M10 | 执行 API | REQ-0001-017 | 执行控制可用 | todo |
+| M10 | 执行 API | REQ-0001-017 | 执行控制可用 | done |
 | M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | todo |
 | M12 | 前端骨架 | REQ-0001-020 | 前端启动成功 | todo |
 | M13 | 模板管理页 | REQ-0001-021 | 模板 CRUD 页面可用 | todo |
