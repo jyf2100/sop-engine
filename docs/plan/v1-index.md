@@ -19,7 +19,7 @@
 | M5 | 流程引擎 | REQ-0001-009, 010 | FlowEngine 可执行流程 | done |
 | M6 | 基础执行器 | REQ-0001-011, 012, 013 | Script/Agent/Condition 可用 | done |
 | M7 | 审批执行器 | REQ-0001-014 | Human 节点可用 | done |
-| M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | todo |
+| M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | done |
 | M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | todo |
 | M10 | 执行 API | REQ-0001-017 | 执行控制可用 | todo |
 | M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | todo |
@@ -43,7 +43,7 @@
 | [v1-m5-flow-engine.md](./v1-m5-flow-engine.md) | M5 | done |
 | [v1-m6-basic-executors.md](./v1-m6-basic-executors.md) | M6 | done |
 | [v1-m7-human-executor.md](./v1-m7-human-executor.md) | M7 | done |
-| [v1-m8-agent-api.md](./v1-m8-agent-api.md) | M8 | todo |
+| [v1-m8-agent-api.md](./v1-m8-agent-api.md) | M8 | done |
 | [v1-m9-template-api.md](./v1-m9-template-api.md) | M9 | todo |
 | [v1-m10-execution-api.md](./v1-m10-execution-api.md) | M10 | todo |
 | [v1-m11-approval-api.md](./v1-m11-approval-api.md) | M11 | todo |
@@ -74,7 +74,7 @@
 | REQ-0001-012 | PRD-0001 §12 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
 | REQ-0001-013 | PRD-0001 §13 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
 | REQ-0001-014 | PRD-0001 §14 | v1-m7-human-executor | `test_human_executor.py` | — | 181 tests passed | done |
-| REQ-0001-015 | PRD-0001 §15 | v1-m8-agent-api | — | — | — | todo |
+| REQ-0001-015 | PRD-0001 §15 | v1-m8-agent-api | `test_agent_api.py` | — | 201 tests passed | done |
 | REQ-0001-016 | PRD-0001 §16 | v1-m9-template-api | — | — | — | todo |
 | REQ-0001-017 | PRD-0001 §17 | v1-m10-execution-api | — | — | — | todo |
 | REQ-0001-018 | PRD-0001 §18 | v1-m11-approval-api | — | — | — | todo |
@@ -102,4 +102,4 @@
 
 ## 当前执行
 
-**M8: Agent API** → [v1-m8-agent-api.md](./v1-m8-agent-api.md)
+**M9: 模板 API** → [v1-m9-template-api.md](./v1-m9-template-api.md)
