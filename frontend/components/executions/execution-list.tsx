@@ -18,8 +18,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiClient } from "@/lib/api-client";
+import { useToast } from "@/components/ui/toast";
 
 interface ExecutionListProps {
   executions: Execution[];
@@ -59,23 +60,25 @@ export function ExecutionList({
   );
   const [nodeExecutions, setNodeExecutions] = useState<NodeExecution[]>([]);
   const [loadingNodes, setLoadingNodes] = useState(false);
+  const { toast } = useToast();
 
   const handleCancel = async () => {
     if (!selectedExecution) return;
     try {
       await apiClient.post(`/api/executions/${selectedExecution.id}/cancel`);
       setCancelOpen(false);
+      toast({ type: "success", message: "执行已取消" });
       onRefresh();
     } catch (error) {
-      console.error("Failed to cancel execution:", error);
+      const message = error instanceof Error ? error.message : "取消执行失败";
+      toast({ type: "error", message });
     }
   };
 
-  const handleViewDetail = async (execution: Execution) => {
+  const handleViewDetail = useCallback(async (execution: Execution) => {
     setSelectedExecution(execution);
     setDetailOpen(true);
 
-    // Load node executions
     setLoadingNodes(true);
     try {
       const data: PaginatedResponse<NodeExecution> = await apiClient.get(
@@ -83,12 +86,13 @@ export function ExecutionList({
       );
       setNodeExecutions(data.items || []);
     } catch (error) {
-      console.error("Failed to load node executions:", error);
+      const message = error instanceof Error ? error.message : "加载节点执行失败";
+      toast({ type: "error", message });
       setNodeExecutions([]);
     } finally {
       setLoadingNodes(false);
     }
-  };
+  }, [toast]);
 
   const canCancel = (status: string) => {
     return status === "pending" || status === "running" || status === "paused";
@@ -180,7 +184,7 @@ export function ExecutionList({
             <DialogDescription>
               ID: {selectedExecution?.id}
               <br />
-              状态: {selectedExecution?.status}
+              状态: {statusLabels[selectedExecution?.status || ""] || selectedExecution?.status}
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4 space-y-4">

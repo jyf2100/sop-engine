@@ -20,13 +20,13 @@ export default function ExecutionsPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [startOpen, setStartOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const loadExecutions = async () => {
     setLoading(true);
     try {
       let url = "/api/executions";
-      if (statusFilter) {
+      if (statusFilter && statusFilter !== "all") {
         url += `?status=${statusFilter}`;
       }
       const data: PaginatedResponse<Execution> = await apiClient.get(url);
@@ -50,17 +50,22 @@ export default function ExecutionsPage() {
   useEffect(() => {
     loadExecutions();
     loadTemplates();
+  }, [statusFilter]);
 
-    // WebSocket for real-time updates
+  useEffect(() => {
+    // WebSocket for real-time updates (connect once)
     const ws = apiClient.createWebSocket((data) => {
-      const msg = data as { type: string };
-      if (msg.type === "execution_update") {
-        loadExecutions();
+      if (data && typeof data === 'object' && 'type' in data) {
+        const msg = data as { type: string };
+        if (msg.type === "execution_update") {
+          loadExecutions();
+        }
       }
     });
 
     return () => ws.close();
-  }, [statusFilter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -73,7 +78,7 @@ export default function ExecutionsPage() {
                 <SelectValue placeholder="全部状态" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">全部状态</SelectItem>
+                <SelectItem value="all">全部状态</SelectItem>
                 <SelectItem value="pending">等待中</SelectItem>
                 <SelectItem value="running">运行中</SelectItem>
                 <SelectItem value="completed">已完成</SelectItem>

@@ -6,6 +6,7 @@ import { TemplateList } from "@/components/templates/template-list";
 import { CreateTemplateDialog } from "@/components/templates/create-template-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/components/ui/toast";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -13,6 +14,7 @@ export default function TemplatesPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const loadTemplates = async () => {
     setLoading(true);
@@ -21,6 +23,7 @@ export default function TemplatesPage() {
       setTemplates(data.items || []);
     } catch (error) {
       console.error("Failed to load templates:", error);
+      toast({ type: "error", message: "加载模板列表失败" });
     } finally {
       setLoading(false);
     }
@@ -34,15 +37,22 @@ export default function TemplatesPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // 文件大小验证
+    const maxSize = 1 * 1024 * 1024; // 1MB
+    if (file.size > maxSize) {
+      toast({ type: "error", message: "文件大小不能超过 1MB" });
+      return;
+    }
+
     setUploading(true);
     try {
       const content = await file.text();
-      const template = await apiClient.post("/api/templates/upload", content);
-      console.log("Uploaded template:", template);
+      const template = await apiClient.post<Template>("/api/templates/upload", content);
+      toast({ type: "success", message: `模板 "${template.name}" 上传成功` });
       loadTemplates();
     } catch (error) {
       console.error("Failed to upload template:", error);
-      alert("上传失败，请检查 YAML 格式");
+      toast({ type: "error", message: "上传失败，请检查 YAML 格式" });
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
