@@ -1,6 +1,6 @@
 "use client";
 
-import { Execution } from "@/lib/api-client";
+import { Execution, Template, NodeExecution, PaginatedResponse } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -23,21 +23,32 @@ import { apiClient } from "@/lib/api-client";
 
 interface ExecutionListProps {
   executions: Execution[];
+  templates: Template[];
   loading: boolean;
   onRefresh: () => void;
 }
 
 const statusColors: Record<string, string> = {
-  pending: "text-gray-500",
-  running: "text-blue-500",
-  paused: "text-yellow-500",
-  completed: "text-green-500",
-  failed: "text-red-500",
-  cancelled: "text-gray-400",
+  pending: "text-gray-500 bg-gray-100",
+  running: "text-blue-500 bg-blue-100",
+  paused: "text-yellow-500 bg-yellow-100",
+  completed: "text-green-500 bg-green-100",
+  failed: "text-red-500 bg-red-100",
+  cancelled: "text-gray-400 bg-gray-100",
+};
+
+const statusLabels: Record<string, string> = {
+  pending: "等待中",
+  running: "运行中",
+  paused: "已暂停",
+  completed: "已完成",
+  failed: "失败",
+  cancelled: "已取消",
 };
 
 export function ExecutionList({
   executions,
+  templates,
   loading,
   onRefresh,
 }: ExecutionListProps) {
@@ -46,6 +57,8 @@ export function ExecutionList({
   const [selectedExecution, setSelectedExecution] = useState<Execution | null>(
     null
   );
+  const [nodeExecutions, setNodeExecutions] = useState<NodeExecution[]>([]);
+  const [loadingNodes, setLoadingNodes] = useState(false);
 
   const handleCancel = async () => {
     if (!selectedExecution) return;
@@ -58,8 +71,32 @@ export function ExecutionList({
     }
   };
 
+  const handleViewDetail = async (execution: Execution) => {
+    setSelectedExecution(execution);
+    setDetailOpen(true);
+
+    // Load node executions
+    setLoadingNodes(true);
+    try {
+      const data: PaginatedResponse<NodeExecution> = await apiClient.get(
+        `/api/executions/${execution.id}/nodes`
+      );
+      setNodeExecutions(data.items || []);
+    } catch (error) {
+      console.error("Failed to load node executions:", error);
+      setNodeExecutions([]);
+    } finally {
+      setLoadingNodes(false);
+    }
+  };
+
   const canCancel = (status: string) => {
     return status === "pending" || status === "running" || status === "paused";
+  };
+
+  const getTemplateName = (templateId: string) => {
+    const template = templates.find((t) => t.id === templateId);
+    return template ? `${template.name} (v${template.version})` : templateId;
   };
 
   if (loading) {
@@ -79,6 +116,7 @@ export function ExecutionList({
             <TableHead>模板</TableHead>
             <TableHead>状态</TableHead>
             <TableHead>开始时间</TableHead>
+            <TableHead>完成时间</TableHead>
             <TableHead className="text-right">操作</TableHead>
           </TableRow>
         </TableHeader>
@@ -88,10 +126,14 @@ export function ExecutionList({
               <TableCell className="font-mono text-sm">
                 {execution.id?.substring(0, 8)}...
               </TableCell>
-              <TableCell>{execution.template_id || "-"}</TableCell>
+              <TableCell>{getTemplateName(execution.template_id)}</TableCell>
               <TableCell>
-                <span className={statusColors[execution.status] || ""}>
-                  {execution.status}
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    statusColors[execution.status] || ""
+                  }`}
+                >
+                  {statusLabels[execution.status] || execution.status}
                 </span>
               </TableCell>
               <TableCell>
@@ -99,14 +141,16 @@ export function ExecutionList({
                   ? new Date(execution.started_at).toLocaleString()
                   : "-"}
               </TableCell>
+              <TableCell>
+                {execution.completed_at
+                  ? new Date(execution.completed_at).toLocaleString()
+                  : "-"}
+              </TableCell>
               <TableCell className="text-right space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    setSelectedExecution(execution);
-                    setDetailOpen(true);
-                  }}
+                  onClick={() => handleViewDetail(execution)}
                 >
                   详情
                 </Button>
@@ -130,7 +174,7 @@ export function ExecutionList({
 
       {/* 详情对话框 */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>执行详情</DialogTitle>
             <DialogDescription>
@@ -143,23 +187,55 @@ export function ExecutionList({
             <div>
               <h4 className="font-medium mb-2">输入参数</h4>
               <pre className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-md overflow-auto text-sm">
-                {JSON.stringify(selectedExecution?.input_params || {}, null, 2)}
+                {JSON.stringify(selectedExecution?.params || {}, null, 2)}
               </pre>
             </div>
+
             <div>
-              <h4 className="font-medium mb-2">输出结果</h4>
-              <pre className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-md overflow-auto text-sm">
-                {JSON.stringify(selectedExecution?.output || {}, null, 2)}
-              </pre>
+              <h4 className="font-medium mb-2">节点执行</h4>
+              {loadingNodes ? (
+                <div className="text-center py-4">加载中...</div>
+              ) : nodeExecutions.length === 0 ? (
+                <div className="text-center py-4 text-zinc-500">暂无节点执行记录</div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>节点ID</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead>开始时间</TableHead>
+                      <TableHead>完成时间</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {nodeExecutions.map((node) => (
+                      <TableRow key={node.id}>
+                        <TableCell>{node.node_id}</TableCell>
+                        <TableCell>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              statusColors[node.status] || ""
+                            }`}
+                          >
+                            {statusLabels[node.status] || node.status}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {node.started_at
+                            ? new Date(node.started_at).toLocaleString()
+                            : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {node.completed_at
+                            ? new Date(node.completed_at).toLocaleString()
+                            : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </div>
-            {selectedExecution?.error && (
-              <div>
-                <h4 className="font-medium mb-2 text-red-500">错误信息</h4>
-                <pre className="bg-red-50 dark:bg-red-900/20 p-4 rounded-md overflow-auto text-sm text-red-600">
-                  {selectedExecution.error}
-                </pre>
-              </div>
-            )}
           </div>
         </DialogContent>
       </Dialog>

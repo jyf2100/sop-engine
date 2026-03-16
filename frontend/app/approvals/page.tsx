@@ -13,7 +13,7 @@ export default function ApprovalsPage() {
     setLoading(true);
     try {
       const data: PendingApprovalListResponse = await apiClient.get("/api/approvals/pending");
-      setApprovals(data.approvals || []);
+      setApprovals(data.items || []);
     } catch (error) {
       console.error("Failed to load approvals:", error);
     } finally {
