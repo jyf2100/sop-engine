@@ -7,6 +7,7 @@ from .agent_config_file import CONFIG_FILE_TYPES, AgentConfigFile
 from .base import Base
 from .credential import Credential
 from .execution import Execution
+from .flow_template import FlowNode, FlowParameter, FlowTemplate, NodeType
 from .node_execution import NodeExecution
 from .template import Template
 
@@ -19,4 +20,8 @@ __all__ = [
     "AgentConfigFile",
     "CONFIG_FILE_TYPES",
     "Credential",
+    "FlowTemplate",
+    "FlowNode",
+    "FlowParameter",
+    "NodeType",
 ]
