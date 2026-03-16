@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,79 +25,89 @@ export default function Home() {
         {/* Main Content */}
         <main className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Templates Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>流程模板</CardTitle>
-              <CardDescription>管理和编辑 YAML 流程模板</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                查看模板
-              </Button>
-            </CardContent>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Link href="/templates">
+              <CardHeader>
+                <CardTitle>流程模板</CardTitle>
+                <CardDescription>管理和编辑 YAML 流程模板</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  查看模板
+                </Button>
+              </CardContent>
+            </Link>
           </Card>
 
           {/* Executions Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>执行监控</CardTitle>
-              <CardDescription>查看和监控流程执行状态</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                查看执行
-              </Button>
-            </CardContent>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Link href="/executions">
+              <CardHeader>
+                <CardTitle>执行监控</CardTitle>
+                <CardDescription>查看和监控流程执行状态</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  查看执行
+                </Button>
+              </CardContent>
+            </Link>
           </Card>
 
           {/* Approvals Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>审批工作台</CardTitle>
-              <CardDescription>处理待审批的人工节点</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                待审批 (0)
-              </Button>
-            </CardContent>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Link href="/approvals">
+              <CardHeader>
+                <CardTitle>审批工作台</CardTitle>
+                <CardDescription>处理待审批的人工节点</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  待审批
+                </Button>
+              </CardContent>
+            </Link>
           </Card>
 
           {/* Agents Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Agent 管理</CardTitle>
-              <CardDescription>配置和管理 OpenClaw Agent</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                管理 Agent
-              </Button>
-            </CardContent>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Link href="/agents">
+              <CardHeader>
+                <CardTitle>Agent 管理</CardTitle>
+                <CardDescription>配置和管理 OpenClaw Agent</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  管理 Agent
+                </Button>
+              </CardContent>
+            </Link>
           </Card>
 
           {/* Flow Editor Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>流程编辑器</CardTitle>
-              <CardDescription>可视化编辑流程模板</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full" disabled>
-                即将推出
-              </Button>
-            </CardContent>
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Link href="/editor">
+              <CardHeader>
+                <CardTitle>流程编辑器</CardTitle>
+                <CardDescription>可视化编辑流程模板</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  打开编辑器
+                </Button>
+              </CardContent>
+            </Link>
           </Card>
 
           {/* Settings Card */}
-          <Card>
+          <Card className="opacity-50">
             <CardHeader>
               <CardTitle>系统设置</CardTitle>
               <CardDescription>配置 OpenClaw 和系统参数</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full">
-                设置
+              <Button variant="outline" className="w-full" disabled>
+                即将推出
               </Button>
             </CardContent>
           </Card>
