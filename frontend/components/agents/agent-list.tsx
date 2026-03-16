@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Agent } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +19,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { EditAgentDialog } from "./edit-agent-dialog";
 import { apiClient } from "@/lib/api-client";
+import { useToast } from "@/components/ui/toast";
+import { Pencil, RefreshCw, Trash2, Eye } from "lucide-react";
 
 interface AgentListProps {
   agents: Agent[];
@@ -30,25 +33,35 @@ interface AgentListProps {
 export function AgentList({ agents, loading, onRefresh }: AgentListProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [syncing, setSyncing] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleDelete = async () => {
     if (!selectedAgent) return;
     try {
       await apiClient.delete(`/api/agents/${selectedAgent.id}`);
       setDeleteOpen(false);
+      toast({ type: "success", message: "Agent 已删除" });
       onRefresh();
     } catch (error) {
-      console.error("Failed to delete agent:", error);
+      const message = error instanceof Error ? error.message : "删除 Agent 失败";
+      toast({ type: "error", message });
     }
   };
 
   const handleSync = async (agentId: string) => {
+    setSyncing(agentId);
     try {
       await apiClient.post(`/api/agents/${agentId}/sync`);
+      toast({ type: "success", message: "Agent 同步成功" });
       onRefresh();
     } catch (error) {
-      console.error("Failed to sync agent:", error);
+      const message = error instanceof Error ? error.message : "同步 Agent 失败";
+      toast({ type: "error", message });
+    } finally {
+      setSyncing(null);
     }
   };
 
@@ -68,6 +81,7 @@ export function AgentList({ agents, loading, onRefresh }: AgentListProps) {
             <TableHead>名称</TableHead>
             <TableHead>工作目录</TableHead>
             <TableHead>状态</TableHead>
+            <TableHead>主模型</TableHead>
             <TableHead>创建时间</TableHead>
             <TableHead className="text-right">操作</TableHead>
           </TableRow>
@@ -75,50 +89,82 @@ export function AgentList({ agents, loading, onRefresh }: AgentListProps) {
         <TableBody>
           {agents.map((agent) => (
             <TableRow key={agent.id}>
-              <TableCell className="font-medium">{agent.name}</TableCell>
-              <TableCell className="font-mono text-sm">
+              <TableCell className="font-medium">
+                {agent.name}
+                {agent.is_default && (
+                  <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                    默认
+                  </span>
+                )}
+              </TableCell>
+              <TableCell className="font-mono text-sm truncate max-w-[200px]">
                 {agent.workspace_path}
               </TableCell>
               <TableCell>
                 {agent.is_active ? (
-                  <span className="text-green-500">活跃</span>
+                  <span className="text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs">
+                    活跃
+                  </span>
                 ) : (
-                  <span className="text-gray-400">停用</span>
+                  <span className="text-gray-500 bg-gray-100 px-2 py-1 rounded-full text-xs">
+                    停用
+                  </span>
                 )}
               </TableCell>
-              <TableCell>
+              <TableCell className="text-sm">
+                {(agent.llm_config?.primary as string) || "-"}
+              </TableCell>
+              <TableCell className="text-sm">
                 {agent.created_at
-                  ? new Date(agent.created_at).toLocaleString()
+                  ? new Date(agent.created_at).toLocaleDateString()
                   : "-"}
               </TableCell>
-              <TableCell className="text-right space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedAgent(agent);
-                    setDetailOpen(true);
-                  }}
-                >
-                  详情
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSync(agent.id)}
-                >
-                  同步
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedAgent(agent);
-                    setDeleteOpen(true);
-                  }}
-                >
-                  删除
-                </Button>
+              <TableCell className="text-right">
+                <div className="flex justify-end gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedAgent(agent);
+                      setDetailOpen(true);
+                    }}
+                    title="查看详情"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedAgent(agent);
+                      setEditOpen(true);
+                    }}
+                    title="编辑"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSync(agent.id)}
+                    disabled={syncing === agent.id}
+                    title="同步"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${syncing === agent.id ? "animate-spin" : ""}`} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => {
+                      setSelectedAgent(agent);
+                      setDeleteOpen(true);
+                    }}
+                    title="删除"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -127,7 +173,7 @@ export function AgentList({ agents, loading, onRefresh }: AgentListProps) {
 
       {/* 详情对话框 */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{selectedAgent?.name}</DialogTitle>
             <DialogDescription>
@@ -156,6 +202,17 @@ export function AgentList({ agents, loading, onRefresh }: AgentListProps) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 编辑对话框 */}
+      <EditAgentDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        agent={selectedAgent}
+        onSuccess={() => {
+          setEditOpen(false);
+          onRefresh();
+        }}
+      />
 
       {/* 删除确认对话框 */}
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>

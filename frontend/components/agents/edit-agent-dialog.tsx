@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { apiClient } from "@/lib/api-client";
+import { useState, useEffect } from "react";
+import { apiClient, Agent } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,31 +14,35 @@ import {
 import { useToast } from "@/components/ui/toast";
 import { AgentForm, createFormDataFromAgent, createApiPayloadFromFormData, AgentFormData } from "./agent-form";
 
-interface CreateAgentDialogProps {
+interface EditAgentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  agent: Agent | null;
   onSuccess: () => void;
 }
 
-export function CreateAgentDialog({
+export function EditAgentDialog({
   open,
   onOpenChange,
+  agent,
   onSuccess,
-}: CreateAgentDialogProps) {
+}: EditAgentDialogProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<AgentFormData>(createFormDataFromAgent());
   const { toast } = useToast();
 
-  const handleClose = () => {
-    // 重置表单
-    setFormData(createFormDataFromAgent());
-    setError(null);
-    onOpenChange(false);
-  };
+  // 当 agent 变化时，重新加载表单数据
+  useEffect(() => {
+    if (agent) {
+      setFormData(createFormDataFromAgent(agent));
+    }
+  }, [agent]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!agent) return;
 
     if (!formData.name.trim()) {
       setError("请输入 Agent 名称");
@@ -49,22 +53,12 @@ export function CreateAgentDialog({
     setError(null);
 
     try {
-      const payload = createApiPayloadFromFormData(formData);
-      // 生成 ID（使用名称的 slug 形式）
-      const slugId = formData.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-
-      await apiClient.post("/api/agents", {
-        ...payload,
-        id: slugId || `agent-${Date.now()}`,
-      });
-      toast({ type: "success", message: "Agent 创建成功" });
-      handleClose();
+      const payload = createApiPayloadFromFormData(formData, agent.id);
+      await apiClient.patch(`/api/agents/${agent.id}`, payload);
+      toast({ type: "success", message: "Agent 更新成功" });
       onSuccess();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "创建 Agent 失败";
+      const message = err instanceof Error ? err.message : "更新 Agent 失败";
       setError(message);
       toast({ type: "error", message });
     } finally {
@@ -73,18 +67,19 @@ export function CreateAgentDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>创建 Agent</DialogTitle>
+          <DialogTitle>编辑 Agent</DialogTitle>
           <DialogDescription>
-            创建一个新的 OpenClaw Agent。配置各个选项后点击创建。
+            修改 Agent 配置。点击保存后生效。
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="py-4">
             <AgentForm
-              mode="create"
+              mode="edit"
+              agent={agent || undefined}
               data={formData}
               onChange={setFormData}
             />
@@ -100,12 +95,12 @@ export function CreateAgentDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={handleClose}
+              onClick={() => onOpenChange(false)}
             >
               取消
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "创建中..." : "创建"}
+              {loading ? "保存中..." : "保存"}
             </Button>
           </DialogFooter>
         </form>
