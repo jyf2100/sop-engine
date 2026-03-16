@@ -10,6 +10,7 @@ from fastapi import FastAPI
 
 from .config import settings
 from .api.agents import router as agents_router
+from .api.templates import router as templates_router
 
 
 @asynccontextmanager
@@ -34,6 +35,7 @@ app = FastAPI(
 
 # 注册路由
 app.include_router(agents_router)
+app.include_router(templates_router)
 
 
 @app.get("/", response_model=dict[str, Any])
