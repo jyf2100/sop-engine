@@ -4,16 +4,21 @@ REQ-0001-001: 项目骨架搭建
 """
 from contextlib import asynccontextmanager
 from typing import Any
+from pathlib import Path
 
 from fastapi import FastAPI
 
 from .config import settings
+from .api.agents import router as agents_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
-    # 启动时初始化
+    # 启动时初始化 AgentService
+    from .services.agent_service import AgentService
+    workspace_root = Path(settings.openclaw_workspace_root).expanduser()
+    app.state.agent_service = AgentService(workspace_root=workspace_root)
     yield
     # 关闭时清理
 
@@ -26,6 +31,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+# 注册路由
+app.include_router(agents_router)
 
 
 @app.get("/", response_model=dict[str, Any])
