@@ -6,11 +6,13 @@ from contextlib import asynccontextmanager
 from typing import Any
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 
 from .config import settings
 from .api.agents import router as agents_router
 from .api.templates import router as templates_router
+from .api.executions import router as executions_router
+from .api.approvals import router as approvals_router, websocket_endpoint
 
 
 @asynccontextmanager
@@ -36,6 +38,15 @@ app = FastAPI(
 # 注册路由
 app.include_router(agents_router)
 app.include_router(templates_router)
+app.include_router(executions_router)
+app.include_router(approvals_router)
+
+
+# WebSocket 端点
+@app.websocket("/ws")
+async def ws_endpoint(websocket: WebSocket):
+    """WebSocket 实时推送端点"""
+    await websocket_endpoint(websocket)
 
 
 @app.get("/", response_model=dict[str, Any])

@@ -3,9 +3,19 @@
 REQ-0001-002: 数据库模型定义
 """
 from datetime import datetime
+from enum import Enum
 from typing import Any
 
 from .base import Base
+
+
+class NodeExecutionStatus(str, Enum):
+    """节点执行状态"""
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    SKIPPED = "skipped"
 
 
 class NodeExecution(Base):
