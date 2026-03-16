@@ -16,9 +16,9 @@
 | M2 | Agent 配置管理 | REQ-0001-003 | Agent CRUD + 配置文件管理 + 同步 | done |
 | M3 | OpenClaw 配置管理 | REQ-0001-004, 005 | 主配置 + 凭证管理可用 | done |
 | M4 | 核心服务 | REQ-0001-006, 007, 008 | 解析器/EventBus/Context 可用 | done |
-| M5 | 流程引擎 | REQ-0001-009, 010 | FlowEngine 可执行流程 | todo |
-| M6 | 基础执行器 | REQ-0001-011, 012, 013 | Script/Agent/Condition 可用 | todo |
-| M7 | 审批执行器 | REQ-0001-014 | Human 节点可用 | todo |
+| M5 | 流程引擎 | REQ-0001-009, 010 | FlowEngine 可执行流程 | done |
+| M6 | 基础执行器 | REQ-0001-011, 012, 013 | Script/Agent/Condition 可用 | done |
+| M7 | 审批执行器 | REQ-0001-014 | Human 节点可用 | done |
 | M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | todo |
 | M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | todo |
 | M10 | 执行 API | REQ-0001-017 | 执行控制可用 | todo |
@@ -40,9 +40,9 @@
 | [v1-m2-agent-config.md](./v1-m2-agent-config.md) | M2 | todo |
 | [v1-m3-openclaw-config.md](./v1-m3-openclaw-config.md) | M3 | todo |
 | [v1-m4-core-services.md](./v1-m4-core-services.md) | M4 | todo |
-| [v1-m5-flow-engine.md](./v1-m5-flow-engine.md) | M5 | todo |
-| [v1-m6-basic-executors.md](./v1-m6-basic-executors.md) | M6 | todo |
-| [v1-m7-human-executor.md](./v1-m7-human-executor.md) | M7 | todo |
+| [v1-m5-flow-engine.md](./v1-m5-flow-engine.md) | M5 | done |
+| [v1-m6-basic-executors.md](./v1-m6-basic-executors.md) | M6 | done |
+| [v1-m7-human-executor.md](./v1-m7-human-executor.md) | M7 | done |
 | [v1-m8-agent-api.md](./v1-m8-agent-api.md) | M8 | todo |
 | [v1-m9-template-api.md](./v1-m9-template-api.md) | M9 | todo |
 | [v1-m10-execution-api.md](./v1-m10-execution-api.md) | M10 | todo |
@@ -68,12 +68,12 @@
 | REQ-0001-006 | PRD-0001 §6 | v1-m4-core-services | `test_template_parser.py` | — | 122 tests passed | done |
 | REQ-0001-007 | PRD-0001 §7 | v1-m4-core-services | `test_event_bus.py` | — | 122 tests passed | done |
 | REQ-0001-008 | PRD-0001 §8 | v1-m4-core-services | `test_context_manager.py` | — | 122 tests passed | done |
-| REQ-0001-009 | PRD-0001 §9 | v1-m5-flow-engine | — | — | — | todo |
-| REQ-0001-010 | PRD-0001 §10 | v1-m5-flow-engine | — | — | — | todo |
-| REQ-0001-011 | PRD-0001 §11 | v1-m6-basic-executors | — | — | — | todo |
-| REQ-0001-012 | PRD-0001 §12 | v1-m6-basic-executors | — | — | — | todo |
-| REQ-0001-013 | PRD-0001 §13 | v1-m6-basic-executors | — | — | — | todo |
-| REQ-0001-014 | PRD-0001 §14 | v1-m7-human-executor | — | — | — | todo |
+| REQ-0001-009 | PRD-0001 §9 | v1-m5-flow-engine | `test_flow_engine.py` | — | 166 tests passed | done |
+| REQ-0001-010 | PRD-0001 §10 | v1-m5-flow-engine | `test_flow_engine.py` | — | 166 tests passed | done |
+| REQ-0001-011 | PRD-0001 §11 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
+| REQ-0001-012 | PRD-0001 §12 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
+| REQ-0001-013 | PRD-0001 §13 | v1-m6-basic-executors | `test_script_executor.py` | — | 181 tests passed | done |
+| REQ-0001-014 | PRD-0001 §14 | v1-m7-human-executor | `test_human_executor.py` | — | 181 tests passed | done |
 | REQ-0001-015 | PRD-0001 §15 | v1-m8-agent-api | — | — | — | todo |
 | REQ-0001-016 | PRD-0001 §16 | v1-m9-template-api | — | — | — | todo |
 | REQ-0001-017 | PRD-0001 §17 | v1-m10-execution-api | — | — | — | todo |
@@ -102,4 +102,4 @@
 
 ## 当前执行
 
-**M4: 核心服务** → [v1-m4-core-services.md](./v1-m4-core-services.md)
+**M8: Agent API** → [v1-m8-agent-api.md](./v1-m8-agent-api.md)
