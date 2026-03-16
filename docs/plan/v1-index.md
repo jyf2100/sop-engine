@@ -22,7 +22,7 @@
 | M8 | Agent API | REQ-0001-015 | Agent CRUD API 可用 | done |
 | M9 | 模板 API | REQ-0001-016 | 模板 CRUD 可用 | done |
 | M10 | 执行 API | REQ-0001-017 | 执行控制可用 | done |
-| M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | todo |
+| M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | done |
 | M12 | 前端骨架 | REQ-0001-020 | 前端启动成功 | todo |
 | M13 | 模板管理页 | REQ-0001-021 | 模板 CRUD 页面可用 | todo |
 | M14 | 执行监控页 | REQ-0001-022 | 监控页面可用 | todo |
@@ -77,8 +77,8 @@
 | REQ-0001-015 | PRD-0001 §15 | v1-m8-agent-api | `test_agent_api.py` | — | 201 tests passed | done |
 | REQ-0001-016 | PRD-0001 §16 | v1-m9-template-api | `test_template_api.py` | — | 213 tests passed | done |
 | REQ-0001-017 | PRD-0001 §17 | v1-m10-execution-api | — | — | — | todo |
-| REQ-0001-018 | PRD-0001 §18 | v1-m11-approval-api | — | — | — | todo |
-| REQ-0001-019 | PRD-0001 §19 | v1-m11-approval-api | — | — | — | todo |
+| REQ-0001-018 | PRD-0001 §18 | v1-m11-approval-api | `test_approval_api.py` | — | 235 tests passed | done |
+| REQ-0001-019 | PRD-0001 §19 | v1-m11-approval-api | `test_approval_api.py` | — | 235 tests passed | done |
 | REQ-0001-020 | PRD-0001 §20 | v1-m12-frontend-skeleton | — | — | — | todo |
 | REQ-0001-021 | PRD-0001 §21 | v1-m13-template-page | — | — | — | todo |
 | REQ-0001-022 | PRD-0001 §22 | v1-m14-execution-page | — | — | — | todo |
