@@ -14,7 +14,7 @@
 |---|--------|------|-----|------|
 | M1 | 后端骨架 | REQ-0001-001, 002 | 服务启动成功，模型定义完成 | done |
 | M2 | Agent 配置管理 | REQ-0001-003 | Agent CRUD + 配置文件管理 + 同步 | done |
-| M3 | OpenClaw 配置管理 | REQ-0001-004, 005 | 主配置 + 凭证管理可用 | todo |
+| M3 | OpenClaw 配置管理 | REQ-0001-004, 005 | 主配置 + 凭证管理可用 | done |
 | M4 | 核心服务 | REQ-0001-006, 007, 008 | 解析器/EventBus/Context 可用 | todo |
 | M5 | 流程引擎 | REQ-0001-009, 010 | FlowEngine 可执行流程 | todo |
 | M6 | 基础执行器 | REQ-0001-011, 012, 013 | Script/Agent/Condition 可用 | todo |
@@ -63,8 +63,8 @@
 | REQ-0001-001 | PRD-0001 §1 | v1-m1-backend-skeleton | — | — | — | todo |
 | REQ-0001-002 | PRD-0001 §2 | v1-m1-backend-skeleton | — | — | — | todo |
 | REQ-0001-003 | PRD-0001 §3 | v1-m2-agent-config | `test_agent_service.py`, `test_agent_sync.py` | — | 51 tests passed | done |
-| REQ-0001-004 | PRD-0001 §4 | v1-m3-openclaw-config | — | — | — | todo |
-| REQ-0001-005 | PRD-0001 §5 | v1-m3-openclaw-config | — | — | — | todo |
+| REQ-0001-004 | PRD-0001 §4 | v1-m3-openclaw-config | `test_openclaw_config.py` | — | 85 tests passed | done |
+| REQ-0001-005 | PRD-0001 §5 | v1-m3-openclaw-config | `test_credential_service.py`, `test_crypto.py` | `test_credential_sync.py` | 85 tests passed | done |
 | REQ-0001-006 | PRD-0001 §6 | v1-m4-core-services | — | — | — | todo |
 | REQ-0001-007 | PRD-0001 §7 | v1-m4-core-services | — | — | — | todo |
 | REQ-0001-008 | PRD-0001 §8 | v1-m4-core-services | — | — | — | todo |
@@ -102,4 +102,4 @@
 
 ## 当前执行
 
-**M1: 后端骨架** → [v1-m1-backend-skeleton.md](./v1-m1-backend-skeleton.md)
+**M4: 核心服务** → [v1-m4-core-services.md](./v1-m4-core-services.md)

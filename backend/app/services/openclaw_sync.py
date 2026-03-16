@@ -1,15 +1,16 @@
 """OpenClaw 同步服务。
 
 REQ-0001-003: Agent 配置管理
+REQ-0001-005: OpenClaw 凭证管理
 
-负责将 Agent 配置同步到 OpenClaw workspace 和 openclaw.json。
+负责将 Agent 配置和凭证同步到 OpenClaw workspace 和 openclaw.json。
 """
 import json
 import shutil
 from pathlib import Path
 from typing import Any
 
-from app.models import Agent, AgentConfigFile
+from app.models import Agent, AgentConfigFile, Credential
 
 
 class OpenClawSync:
@@ -25,6 +26,7 @@ class OpenClawSync:
             workspace_root = Path(workspace_root)
         self.workspace_root = workspace_root
         self.openclaw_json_path = workspace_root / "openclaw.json"
+        self.credentials_dir = workspace_root / ".credentials"
 
     def sync_agent(
         self,
@@ -248,3 +250,48 @@ class OpenClawSync:
             config["default"] = True
 
         return config
+
+    def sync_credentials(self, credentials: list[Credential]) -> None:
+        """同步凭证到 OpenClaw
+
+        REQ-0001-005: 凭证同步
+
+        将凭证的脱敏版本写入 .credentials 目录。
+
+        Args:
+            credentials: 凭证列表
+        """
+        # 创建凭证目录
+        self.credentials_dir.mkdir(parents=True, exist_ok=True)
+
+        # 获取现有凭证文件
+        existing_files = set(f.stem for f in self.credentials_dir.glob("*.json"))
+
+        # 同步每个凭证
+        synced_ids = set()
+        for credential in credentials:
+            cred_file = self.credentials_dir / f"{credential.id}.json"
+
+            # 只保存脱敏后的凭证信息
+            cred_data = {
+                "id": credential.id,
+                "name": credential.name,
+                "type": credential.type,
+                "masked_value": credential.masked_value,
+                "agent_id": credential.agent_id,
+                "created_at": credential.created_at.isoformat(),
+                "updated_at": credential.updated_at.isoformat(),
+            }
+
+            cred_file.write_text(json.dumps(cred_data, indent=2, ensure_ascii=False))
+            synced_ids.add(credential.id)
+
+        # 删除已不存在的凭证文件
+        for cred_id in existing_files - synced_ids:
+            cred_file = self.credentials_dir / f"{cred_id}.json"
+            if cred_file.exists():
+                cred_file.unlink()
+
+
+# Alias for consistency
+OpenClawSyncService = OpenClawSync
