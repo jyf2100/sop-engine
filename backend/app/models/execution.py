@@ -3,9 +3,20 @@
 REQ-0001-002: 数据库模型定义
 """
 from datetime import datetime
+from enum import Enum
 from typing import Any
 
 from .base import Base
+
+
+class ExecutionStatus(str, Enum):
+    """执行状态"""
+    PENDING = "pending"
+    RUNNING = "running"
+    PAUSED = "paused"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
 
 
 class Execution(Base):
@@ -24,3 +35,4 @@ class Execution(Base):
     started_at: datetime | None = None
     completed_at: datetime | None = None
     created_at: datetime | None = None
+    updated_at: datetime | None = None
