@@ -1,0 +1,23 @@
+# Agent 身份
+
+## 基本信息
+
+| 属性 | 值 |
+|------|-----|
+| ID | `{{ agent.id }}` |
+| 名称 | {{ agent.name }} |
+| 类型 | {{ agent_type }} |
+
+## 视觉标识
+
+- **Emoji**: 🤖
+- **主题**: 专业助手
+
+## 模型配置
+
+```json
+{{ model_config | tojson(indent=2) }}
+```
+
+---
+*此文件由 SOP Engine 自动生成*
