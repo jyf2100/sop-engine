@@ -6,6 +6,7 @@
  * 覆盖用户流程：
  * 1. 查看 Agent 列表
  * 2. 打开创建 Agent 对话框
+ * 3. 填写新表单
  */
 
 import { test, expect } from '@playwright/test';
@@ -30,8 +31,16 @@ test.describe('Agent 管理', () => {
 
     // 验证对话框打开
     await expect(page.getByRole('dialog')).toBeVisible();
+
+    // 验证表单标签页存在
+    await expect(page.getByRole('tab', { name: '基本信息' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'LLM 配置' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: '沙箱配置' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: '工具配置' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: '高级配置' })).toBeVisible();
+
+    // 验证基本信息表单字段
     await expect(page.getByLabel('名称')).toBeVisible();
-    await expect(page.getByLabel('工作目录')).toBeVisible();
     await expect(page.getByRole('button', { name: '创建' })).toBeVisible();
   });
 
@@ -39,13 +48,17 @@ test.describe('Agent 管理', () => {
     // 打开创建对话框
     await page.getByRole('button', { name: '创建 Agent' }).click();
 
-    // 填写表单
+    // 填写基本信息
     await page.getByLabel('名称').fill('测试 Agent');
-    await page.getByLabel('工作目录').fill('/tmp/test-workspace');
 
     // 验证输入成功
     await expect(page.getByLabel('名称')).toHaveValue('测试 Agent');
-    await expect(page.getByLabel('工作目录')).toHaveValue('/tmp/test-workspace');
+
+    // 切换到 LLM 配置标签页
+    await page.getByRole('tab', { name: 'LLM 配置' }).click();
+
+    // 验证 LLM 配置表单字段存在
+    await expect(page.getByLabel('Base URL')).toBeVisible();
   });
 
   test('应该显示表格或空状态', async ({ page }) => {
