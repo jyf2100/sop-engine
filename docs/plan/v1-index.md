@@ -24,11 +24,11 @@
 | M10 | 执行 API | REQ-0001-017 | 执行控制可用 | done |
 | M11 | 审批 API | REQ-0001-018, 019 | 审批 + WebSocket 可用 | done |
 | M12 | 前端骨架 | REQ-0001-020 | 前端启动成功 | done |
-| M13 | 模板管理页 | REQ-0001-021 | 模板 CRUD 页面可用 | todo |
-| M14 | 执行监控页 | REQ-0001-022 | 监控页面可用 | todo |
-| M15 | 审批工作台 | REQ-0001-023 | 审批页面可用 | todo |
-| M16 | 流程编辑器 | REQ-0001-024 | 可视化编辑器可用 | todo |
-| M17 | Agent 管理页 | REQ-0001-025 | Agent 管理页面可用 | todo |
+| M13 | 模板管理页 | REQ-0001-021 | 模板 CRUD 页面可用 | done |
+| M14 | 执行监控页 | REQ-0001-022 | 监控页面可用 | done |
+| M15 | 审批工作台 | REQ-0001-023 | 审批页面可用 | done |
+| M16 | 流程编辑器 | REQ-0001-024 | 可视化编辑器可用 | done |
+| M17 | Agent 管理页 | REQ-0001-025 | Agent 管理页面可用 | done |
 
 ---
 
@@ -48,11 +48,11 @@
 | [v1-m10-execution-api.md](./v1-m10-execution-api.md) | M10 | todo |
 | [v1-m11-approval-api.md](./v1-m11-approval-api.md) | M11 | todo |
 | [v1-m12-frontend-skeleton.md](./v1-m12-frontend-skeleton.md) | M12 | todo |
-| [v1-m13-template-page.md](./v1-m13-template-page.md) | M13 | todo |
-| [v1-m14-execution-page.md](./v1-m14-execution-page.md) | M14 | todo |
-| [v1-m15-approval-page.md](./v1-m15-approval-page.md) | M15 | todo |
-| [v1-m16-flow-editor.md](./v1-m16-flow-editor.md) | M16 | todo |
-| [v1-m17-agent-page.md](./v1-m17-agent-page.md) | M17 | todo |
+| [v1-m13-template-page.md](./v1-m13-template-page.md) | M13 | done |
+| [v1-m14-execution-page.md](./v1-m14-execution-page.md) | M14 | done |
+| [v1-m15-approval-page.md](./v1-m15-approval-page.md) | M15 | done |
+| [v1-m16-flow-editor.md](./v1-m16-flow-editor.md) | M16 | done |
+| [v1-m17-agent-page.md](./v1-m17-agent-page.md) | M17 | done |
 
 ---
 
@@ -80,11 +80,11 @@
 | REQ-0001-018 | PRD-0001 §18 | v1-m11-approval-api | `test_approval_api.py` | — | 235 tests passed | done |
 | REQ-0001-019 | PRD-0001 §19 | v1-m11-approval-api | `test_approval_api.py` | — | 235 tests passed | done |
 | REQ-0001-020 | PRD-0001 §20 | v1-m12-frontend-skeleton | — | — | — | todo |
-| REQ-0001-021 | PRD-0001 §21 | v1-m13-template-page | — | — | — | todo |
-| REQ-0001-022 | PRD-0001 §22 | v1-m14-execution-page | — | — | — | todo |
-| REQ-0001-023 | PRD-0001 §23 | v1-m15-approval-page | — | — | — | todo |
-| REQ-0001-024 | PRD-0001 §24 | v1-m16-flow-editor | — | — | — | todo |
-| REQ-0001-025 | PRD-0001 §25 | v1-m17-agent-page | — | — | — | todo |
+| REQ-0001-021 | PRD-0001 §21 | v1-m13-template-page | — | — | frontend build passed | done |
+| REQ-0001-022 | PRD-0001 §22 | v1-m14-execution-page | — | — | frontend build passed | done |
+| REQ-0001-023 | PRD-0001 §23 | v1-m15-approval-page | — | — | frontend build passed | done |
+| REQ-0001-024 | PRD-0001 §24 | v1-m16-flow-editor | — | — | frontend build passed | done |
+| REQ-0001-025 | PRD-0001 §25 | v1-m17-agent-page | — | — | frontend build passed | done |
 
 ---
 
@@ -102,4 +102,11 @@
 
 ## 当前执行
 
-**M9: 模板 API** → [v1-m9-template-api.md](./v1-m9-template-api.md)
+**v1 完成** - 所有 17 个里程碑已完成。
+
+前端页面（M13-M17）已实现：
+- 模板管理页：列表、创建、查看、删除
+- 执行监控页：列表、详情、取消、WebSocket 实时更新
+- 审批工作台：待审批列表、批准/拒绝操作
+- 流程编辑器：可视化节点拖拽、连线、YAML 导出
+- Agent 管理页：列表、创建、详情、同步、删除
