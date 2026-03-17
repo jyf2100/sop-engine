@@ -11,6 +11,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .api.agents import router as agents_router
+from .api.channels import router as channels_router
+from .api.models import router as models_router
 from .api.templates import router as templates_router
 from .api.executions import router as executions_router
 from .api.approvals import router as approvals_router, websocket_endpoint
@@ -19,10 +21,15 @@ from .api.approvals import router as approvals_router, websocket_endpoint
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
-    # 启动时初始化 AgentService
+    # 启动时初始化服务
     from .services.agent_service import AgentService
+    from .services.channel_service import ChannelService
+    from .services.model_service import ModelService
+
     workspace_root = Path(settings.openclaw_workspace_root).expanduser()
     app.state.agent_service = AgentService(workspace_root=workspace_root)
+    app.state.model_service = ModelService()
+    app.state.channel_service = ChannelService()
     yield
     # 关闭时清理
 
@@ -47,6 +54,8 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(agents_router)
+app.include_router(channels_router)
+app.include_router(models_router)
 app.include_router(templates_router)
 app.include_router(executions_router)
 app.include_router(approvals_router)
