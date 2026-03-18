@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .api.agents import router as agents_router
+from .api.bindings import router as bindings_router
 from .api.channels import router as channels_router
 from .api.models import router as models_router
 from .api.templates import router as templates_router
@@ -54,6 +55,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(agents_router)
+app.include_router(bindings_router)
 app.include_router(channels_router)
 app.include_router(models_router)
 app.include_router(templates_router)
