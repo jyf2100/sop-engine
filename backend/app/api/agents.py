@@ -41,6 +41,10 @@ async def create_agent(request: Request, data: dict[str, Any]) -> dict[str, Any]
             llm_config=data.get("llm_config"),
             sandbox_config=data.get("sandbox_config"),
             tools_config=data.get("tools_config"),
+            heartbeat_config=data.get("heartbeat_config"),
+            memory_search_config=data.get("memory_search_config"),
+            group_chat_config=data.get("group_chat_config"),
+            identity=data.get("identity"),
             is_default=data.get("is_default", False),
         )
         return _agent_to_dict(agent)
@@ -74,6 +78,10 @@ async def update_agent(
             llm_config=data.get("llm_config"),
             sandbox_config=data.get("sandbox_config"),
             tools_config=data.get("tools_config"),
+            heartbeat_config=data.get("heartbeat_config"),
+            memory_search_config=data.get("memory_search_config"),
+            group_chat_config=data.get("group_chat_config"),
+            identity=data.get("identity"),
             is_default=data.get("is_default"),
             is_active=data.get("is_active"),
         )
@@ -179,6 +187,10 @@ def _agent_to_dict(agent: Agent) -> dict[str, Any]:
         "llm_config": agent.llm_config,
         "sandbox_config": agent.sandbox_config,
         "tools_config": agent.tools_config,
+        "heartbeat_config": agent.heartbeat_config,
+        "memory_search_config": agent.memory_search_config,
+        "group_chat_config": agent.group_chat_config,
+        "identity": agent.identity,
         "is_default": agent.is_default,
         "is_active": agent.is_active,
         "created_at": agent.created_at.isoformat() if agent.created_at else None,

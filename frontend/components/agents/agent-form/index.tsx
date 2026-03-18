@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Agent } from "@/lib/api-client";
+import { Agent, SessionConfig, MessagesConfig, CommandsConfig } from "@/lib/api-client";
 import { BasicInfoTab } from "./basic-info-tab";
 import { LlmConfigTab } from "./llm-config-tab";
 import { SandboxConfigTab } from "./sandbox-config-tab";
 import { ToolsConfigTab } from "./tools-config-tab";
 import { AdvancedConfigTab } from "./advanced-config-tab";
+import { SessionConfigTab } from "./session-config-tab";
 
 // 默认 LLM 配置
 const defaultLlmConfig = {
@@ -45,8 +46,27 @@ const defaultToolsConfig = {
   exec: [] as string[],
 };
 
+// REQ-0001-027: 高级配置类型
+interface AdvancedConfig {
+  heartbeat: {
+    every: string;
+    target: string;
+  };
+  memorySearch: {
+    enabled: boolean;
+    provider: string;
+    model: string;
+  };
+  groupChat: {
+    mentionPatterns: string[];
+  };
+  session?: SessionConfig;
+  messages?: MessagesConfig;
+  commands?: CommandsConfig;
+}
+
 // 默认高级配置
-const defaultAdvancedConfig = {
+const defaultAdvancedConfig: AdvancedConfig = {
   heartbeat: {
     every: "30m",
     target: "heartbeat.md",
@@ -57,8 +77,14 @@ const defaultAdvancedConfig = {
     model: "text-embedding-3-small",
   },
   groupChat: {
-    mentionPatterns: [] as string[],
+    mentionPatterns: [],
   },
+};
+
+// 默认身份标识
+const defaultIdentity = {
+  name: "",
+  emoji: "🤖",
 };
 
 export interface AgentFormData {
@@ -67,7 +93,8 @@ export interface AgentFormData {
   llmConfig: typeof defaultLlmConfig;
   sandboxConfig: typeof defaultSandboxConfig;
   toolsConfig: typeof defaultToolsConfig;
-  advancedConfig: typeof defaultAdvancedConfig;
+  advancedConfig: AdvancedConfig;
+  identity: typeof defaultIdentity;
 }
 
 interface AgentFormProps {
@@ -92,7 +119,7 @@ export function AgentForm({ mode, agent, data, onChange }: AgentFormProps) {
     onChange({ ...data, toolsConfig });
   };
 
-  const updateAdvancedConfig = (advancedConfig: typeof defaultAdvancedConfig) => {
+  const updateAdvancedConfig = (advancedConfig: AdvancedConfig) => {
     onChange({ ...data, advancedConfig });
   };
 
@@ -159,6 +186,7 @@ export function createFormDataFromAgent(agent?: Agent): AgentFormData {
       sandboxConfig: { ...defaultSandboxConfig },
       toolsConfig: { ...defaultToolsConfig },
       advancedConfig: { ...defaultAdvancedConfig },
+      identity: { ...defaultIdentity },
     };
   }
 
@@ -187,6 +215,14 @@ export function createFormDataFromAgent(agent?: Agent): AgentFormData {
       heartbeat: (agent.heartbeat_config as typeof defaultAdvancedConfig.heartbeat) || defaultAdvancedConfig.heartbeat,
       memorySearch: (agent.memory_search_config as typeof defaultAdvancedConfig.memorySearch) || defaultAdvancedConfig.memorySearch,
       groupChat: (agent.group_chat_config as typeof defaultAdvancedConfig.groupChat) || defaultAdvancedConfig.groupChat,
+      // REQ-0001-027: 新增配置
+      session: agent.session_config as SessionConfig | undefined,
+      messages: agent.messages_config as MessagesConfig | undefined,
+      commands: agent.commands_config as CommandsConfig | undefined,
+    },
+    identity: {
+      name: (agent.identity?.name as string) || agent.name || "",
+      emoji: (agent.identity?.emoji as string) || defaultIdentity.emoji,
     },
   };
 }
@@ -217,6 +253,14 @@ export function createApiPayloadFromFormData(data: AgentFormData, agentId?: stri
     heartbeat_config: data.advancedConfig.heartbeat,
     memory_search_config: data.advancedConfig.memorySearch,
     group_chat_config: data.advancedConfig.groupChat,
+    // REQ-0001-027: 新增配置
+    session_config: data.advancedConfig.session,
+    messages_config: data.advancedConfig.messages,
+    commands_config: data.advancedConfig.commands,
+    identity: {
+      name: data.identity.name || data.name,
+      emoji: data.identity.emoji,
+    },
     is_active: data.isActive,
   };
 }

@@ -1,4 +1,4 @@
-# Agent 身份
+# Agent 身份配置
 
 ## 基本信息
 
@@ -7,17 +7,80 @@
 | ID | `{{ agent.id }}` |
 | 名称 | {{ agent.name }} |
 | 类型 | {{ agent_type }} |
+| 状态 | {{ "活跃" if agent.is_active else "停用" }} |
+| 默认 | {{ "是" if agent.is_default else "否" }} |
 
 ## 视觉标识
 
 - **Emoji**: 🤖
 - **主题**: 专业助手
 
-## 模型配置
+---
+
+## LLM 配置
 
 ```json
 {{ model_config | tojson(indent=2) }}
 ```
 
 ---
-*此文件由 SOP Engine 自动生成*
+
+## 沙箱配置
+
+```json
+{{ agent.sandbox_config | tojson(indent=2) }}
+```
+
+### 配置说明
+
+| 参数 | 说明 |
+|------|------|
+| `mode` | 沙箱模式：non-main（推荐）、full-access、restricted、docker |
+| `workspaceAccess` | 工作区访问：none、read-only、read-write、full |
+| `scope` | 允许访问的目录范围 |
+| `docker` | Docker 配置（仅 docker 模式） |
+
+---
+
+## 工具配置
+
+```json
+{{ agent.tools_config | tojson(indent=2) }}
+```
+
+### 配置说明
+
+| 参数 | 说明 |
+|------|------|
+| `profile` | 工具配置集：default、minimal、full |
+| `allow` | 允许使用的工具列表 |
+| `deny` | 禁止使用的工具列表 |
+| `exec` | 允许执行的命令列表 |
+
+---
+
+## 心跳配置
+
+```json
+{{ agent.heartbeat_config | tojson(indent=2) if agent.heartbeat_config else "{}" }}
+```
+
+---
+
+## 记忆搜索配置
+
+```json
+{{ agent.memory_search_config | tojson(indent=2) if agent.memory_search_config else "{}" }}
+```
+
+---
+
+## 群聊配置
+
+```json
+{{ agent.group_chat_config | tojson(indent=2) if agent.group_chat_config else "{}" }}
+```
+
+---
+
+*此文件由 SOP Engine 自动生成 - {{ agent.updated_at }}*

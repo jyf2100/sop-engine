@@ -31,7 +31,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 | M1 | Channel 配置对齐 | REQ-0001-026 | 同步保留非管理字段，多账号可用 | **done** |
 | M2 | Agent 配置对齐 | REQ-0001-027 | Session/Messages/Commands 配置完整 | **done** |
 | M3 | Bindings 支持 | REQ-0001-028 | 多 Agent 路由可用 | **done** |
-| M4 | 前端适配 | REQ-0001-029 | 高级配置 Tab 可用 | todo |
+| M4 | 前端适配 | REQ-0001-029 | 高级配置 Tab 可用 | **in_progress** |
 | M5 | E2E 测试完善 | REQ-0001-030 | 所有 E2E 测试通过 | todo |
 
 ---
@@ -74,16 +74,19 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 ## 当前执行
 
-**v2-m3 完成** - Bindings 配置支持已完成
+**v2-m4 进行中** - 前端适配
 
 完成内容：
-- ✅ `Binding` 模型：type (route/acp), agent_id, match
-- ✅ `BindingMatch` 模型：channel, account_id, peer, guild_id, team_id
-- ✅ `AcpConfig` 模型：mode, label, cwd, backend
-- ✅ `BindingsConfig` 模型：管理多个绑定
-- ✅ `match_binding()` 函数：优先级匹配（peer > guild > team > account > default）
-- ✅ `BindingService` 服务：CRUD + 同步到 openclaw.json
-- ✅ `/api/bindings` API 端点
-- ✅ 38 个单元测试全部通过
+- ✅ `SessionConfigTab` 组件：Session 配置编辑 UI
+- ✅ `AdvancedConfigTab` 更新：集成 Session 配置 section
+- ✅ `api-client.ts` 类型更新：SessionConfig/MessagesConfig/CommandsConfig
+- ✅ `Agent` 接口更新：添加 session_config/messages_config/commands_config 字段
+- ✅ `index.tsx` 更新：AdvancedConfig 类型定义和数据流
+- ✅ TypeScript 编译通过
+- ✅ 前端构建通过
 
-下一步：v2-m4 前端适配
+待完成：
+- [ ] Messages/Commands 配置 UI（或集成到高级配置）
+- [ ] 前端 E2E 测试验证
+
+下一步：完成前端 UI 测试验证，然后进入 v2-m5 E2E 测试

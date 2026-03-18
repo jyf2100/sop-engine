@@ -57,8 +57,8 @@ test.describe('Agent 管理', () => {
     // 切换到 LLM 配置标签页
     await page.getByRole('tab', { name: 'LLM 配置' }).click();
 
-    // 验证 LLM 配置表单字段存在
-    await expect(page.getByLabel('Base URL')).toBeVisible();
+    // 验证 LLM 配置表单字段存在 - 现在是模型选择
+    await expect(page.getByText('选择模型')).toBeVisible();
   });
 
   test('应该显示表格或空状态', async ({ page }) => {

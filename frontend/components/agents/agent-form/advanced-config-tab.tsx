@@ -12,8 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronDown, ChevronRight, X, Plus } from "lucide-react";
 import { JsonEditor } from "./json-editor";
+import { SessionConfigTab } from "./session-config-tab";
+import {
+  SessionConfig,
+  MessagesConfig,
+  CommandsConfig,
+} from "@/lib/api-client";
 
 // 心跳间隔预设
 const HEARTBEAT_INTERVALS = [
@@ -57,6 +64,10 @@ interface AdvancedConfig {
   heartbeat: HeartbeatConfig;
   memorySearch: MemorySearchConfig;
   groupChat: GroupChatConfig;
+  // REQ-0001-027: 新增配置
+  session?: SessionConfig;
+  messages?: MessagesConfig;
+  commands?: CommandsConfig;
 }
 
 interface AdvancedConfigTabProps {
@@ -65,10 +76,12 @@ interface AdvancedConfigTabProps {
 }
 
 export function AdvancedConfigTab({ config, onChange }: AdvancedConfigTabProps) {
+  const [activeSubTab, setActiveSubTab] = useState("heartbeat");
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     heartbeat: true,
     memorySearch: true,
     groupChat: false,
+    session: false,
   });
 
   const [newPattern, setNewPattern] = useState("");
@@ -96,6 +109,18 @@ export function AdvancedConfigTab({ config, onChange }: AdvancedConfigTabProps) 
       ...config,
       groupChat: { ...config.groupChat, ...updates },
     });
+  };
+
+  const updateSession = (session: SessionConfig) => {
+    onChange({ ...config, session });
+  };
+
+  const updateMessages = (messages: MessagesConfig) => {
+    onChange({ ...config, messages });
+  };
+
+  const updateCommands = (commands: CommandsConfig) => {
+    onChange({ ...config, commands });
   };
 
   const addPattern = () => {
@@ -304,6 +329,35 @@ export function AdvancedConfigTab({ config, onChange }: AdvancedConfigTabProps) 
                 </p>
               </div>
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* REQ-0001-027: Session 配置 */}
+      <div className="border rounded-lg">
+        <button
+          type="button"
+          onClick={() => toggleSection("session")}
+          className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+        >
+          <div className="flex items-center gap-2">
+            {expandedSections.session ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+            <span className="font-medium">Session 配置</span>
+          </div>
+          <span className="text-xs text-zinc-500">
+            {config.session?.dm_scope || "未配置"}
+          </span>
+        </button>
+        {expandedSections.session && (
+          <div className="p-4 pt-0 border-t">
+            <SessionConfigTab
+              config={config.session}
+              onChange={updateSession}
+            />
           </div>
         )}
       </div>

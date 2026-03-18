@@ -32,12 +32,13 @@ export function EditAgentDialog({
   const [formData, setFormData] = useState<AgentFormData>(createFormDataFromAgent());
   const { toast } = useToast();
 
-  // 当 agent 变化时，重新加载表单数据
+  // 当对话框打开时，重新加载表单数据
   useEffect(() => {
-    if (agent) {
+    if (open && agent) {
       setFormData(createFormDataFromAgent(agent));
+      setError(null);
     }
-  }, [agent]);
+  }, [open, agent]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +69,7 @@ export function EditAgentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>编辑 Agent</DialogTitle>
           <DialogDescription>

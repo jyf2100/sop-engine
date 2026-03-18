@@ -11,6 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { X, Plus } from "lucide-react";
 import { JsonEditor } from "./json-editor";
 
@@ -189,6 +195,7 @@ export function SandboxConfigTab({ config, onChange }: SandboxConfigTabProps) {
                   type="button"
                   variant="outline"
                   size="icon"
+                  aria-label="移除作用域"
                   onClick={() => removeScope(index)}
                 >
                   <X className="h-4 w-4" />
@@ -290,6 +297,7 @@ export function SandboxConfigTab({ config, onChange }: SandboxConfigTabProps) {
                     type="button"
                     variant="outline"
                     size="icon"
+                    aria-label="移除挂载卷"
                     onClick={() => removeVolume(index)}
                   >
                     <X className="h-4 w-4" />
@@ -323,6 +331,7 @@ export function SandboxConfigTab({ config, onChange }: SandboxConfigTabProps) {
                     type="button"
                     variant="outline"
                     size="icon"
+                    aria-label="移除环境变量"
                     onClick={() => removeEnvironment(key)}
                   >
                     <X className="h-4 w-4" />
@@ -352,19 +361,20 @@ export function SandboxConfigTab({ config, onChange }: SandboxConfigTabProps) {
       )}
 
       {/* 高级 JSON 配置 */}
-      <details className="group">
-        <summary className="cursor-pointer text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1">
-          <span className="transition-transform group-open:rotate-90">▶</span>
-          高级配置 (JSON)
-        </summary>
-        <div className="mt-3">
-          <JsonEditor
-            value={config}
-            onChange={onChange}
-            height="150px"
-          />
-        </div>
-      </details>
+      <Accordion type="single" collapsible>
+        <AccordionItem value="json-config">
+          <AccordionTrigger className="cursor-pointer text-sm font-medium text-zinc-600 hover:text-zinc-900 px-2 py-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 w-full text-left">
+            高级配置 (JSON)
+          </AccordionTrigger>
+          <AccordionContent className="mt-3">
+            <JsonEditor
+              value={config}
+              onChange={onChange}
+              height="150px"
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
