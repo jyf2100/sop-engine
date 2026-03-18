@@ -719,3 +719,122 @@
 - [ ] 配置文件编辑器可用
 - [ ] 同步状态正确展示
 - [ ] E2E 测试覆盖管理流程
+
+---
+
+## REQ-0001-026: Channel 配置完整对齐
+
+**动机**：与 OpenClaw 官方配置规范完全对齐，支持所有 Channel 类型的完整字段
+
+**范围**：
+- 同步逻辑修复：采用 merge 策略，保留非管理字段
+- 多账号支持：`accounts` 和 `default_account` 结构
+- Telegram 完整字段：reaction_notifications, history_limit, webhook, network, proxy 等
+- Feishu 完整字段：domain, connection_mode, webhook_path, typing_indicator 等
+- WhatsApp 完整字段：ack_reaction, send_read_receipts, chunk_mode 等
+- 通用字段：streaming, text_chunk_limit, media_max_mb, config_writes
+
+**非目标**：
+- 不支持 Discord/Slack（后续迭代）
+- 不实现高级网络配置的 UI
+
+**验收口径**：
+- [ ] Channel 同步后非管理字段保留
+- [ ] 多账号结构正确写入 openclaw.json
+- [ ] 所有 Channel 类型完整字段可配置
+- [ ] 单元测试覆盖率 ≥80%
+- [ ] E2E 测试覆盖同步流程
+
+---
+
+## REQ-0001-027: Agent 配置完整对齐
+
+**动机**：与 OpenClaw 官方配置规范完全对齐，支持 Agent 完整配置
+
+**范围**：
+- Session 配置：dm_scope, reset, maintenance, thread_bindings, send_policy
+- Messages 配置：queue modes, inbound debounce, TTS
+- Commands 配置：native, text, bash, permissions
+- Compaction 配置：mode, reserveTokensFloor, memoryFlush
+- 模型配置增强：models catalog, image_model, pdf_model
+- 沙箱配置增强：docker 后端完整配置
+
+**非目标**：
+- 不支持 SSH/openshell 后端（后续迭代）
+- 不实现 TTS 的 UI 配置
+
+**验收口径**：
+- [ ] Session 配置正确同步到 openclaw.json
+- [ ] Messages/Commands 配置完整支持
+- [ ] 模型目录配置可用
+- [ ] 单元测试覆盖率 ≥80%
+- [ ] 配置变更后 Agent 运行正常
+
+---
+
+## REQ-0001-028: Bindings 配置支持
+
+**动机**：支持多 Agent 路由，实现灵活的消息分发
+
+**范围**：
+- Binding 模型：type (route/acp), agent_id, match
+- BindingMatch 规则：channel, account_id, peer, guild_id, team_id
+- 优先级顺序：peer > guildId > teamId > accountId > default
+- ACP 绑定配置：mode, label, cwd, backend
+
+**非目标**：
+- 不支持 ACP 后端的完整 UI
+- 不实现动态绑定热更新
+
+**验收口径**：
+- [ ] Binding CRUD API 可用
+- [ ] 绑定规则正确写入 openclaw.json
+- [ ] 优先级匹配逻辑正确
+- [ ] 单元测试覆盖所有匹配场景
+- [ ] E2E 测试覆盖路由流程
+
+---
+
+## REQ-0001-029: 前端适配 - 高级配置
+
+**动机**：前端 UI 支持完整配置字段的编辑
+
+**范围**：
+- Channel 高级配置 Tab：完整字段编辑
+- Agent 高级配置 Tab：Session/Messages/Commands 配置
+- 多账号管理 UI：账号列表、切换、配置
+- 配置预设：常用配置快速应用
+- JSON 编辑器：高级用户直接编辑 JSON
+
+**非目标**：
+- 不实现所有高级字段的 UI（部分通过 JSON 编辑器）
+- 不实现配置版本对比 UI
+
+**验收口径**：
+- [ ] Channel 高级配置 Tab 可用
+- [ ] Agent 高级配置 Tab 可用
+- [ ] JSON 编辑器可用且验证通过
+- [ ] 配置预设可一键应用
+- [ ] E2E 测试覆盖配置流程
+
+---
+
+## REQ-0001-030: E2E 测试完善
+
+**动机**：确保完整用户流程可自动化验证
+
+**范围**：
+- Channel 配置流程 E2E：创建 → 配置 → 同步 → 验证
+- Agent 配置流程 E2E：创建 → 高级配置 → 同步 → 验证
+- Bindings 流程 E2E：创建 → 配置 → 路由验证
+- 回归测试：v1 功能不受影响
+
+**非目标**：
+- 不覆盖所有边界场景（单元测试覆盖）
+- 不实现性能测试
+
+**验收口径**：
+- [ ] 所有 E2E 测试通过
+- [ ] 覆盖核心用户流程
+- [ ] 测试可重复运行
+- [ ] CI 集成成功
