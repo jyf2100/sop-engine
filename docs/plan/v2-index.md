@@ -28,7 +28,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 | # | 里程碑 | 范围 | DoD | 状态 |
 |---|--------|------|-----|------|
-| M1 | Channel 配置对齐 | REQ-0001-026 | 同步保留非管理字段，多账号可用 | todo |
+| M1 | Channel 配置对齐 | REQ-0001-026 | 同步保留非管理字段，多账号可用 | **done** |
 | M2 | Agent 配置对齐 | REQ-0001-027 | Session/Messages/Commands 配置完整 | todo |
 | M3 | Bindings 支持 | REQ-0001-028 | 多 Agent 路由可用 | todo |
 | M4 | 前端适配 | REQ-0001-029 | 高级配置 Tab 可用 | todo |
@@ -40,7 +40,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 | 文件 | 里程碑 | 状态 |
 |------|--------|------|
-| [v2-m1-channel-alignment.md](./v2-m1-channel-alignment.md) | M1 | todo |
+| [v2-m1-channel-alignment.md](./v2-m1-channel-alignment.md) | M1 | **done** |
 | [v2-m2-agent-alignment.md](./v2-m2-agent-alignment.md) | M2 | todo |
 | [v2-m3-bindings.md](./v2-m3-bindings.md) | M3 | todo |
 | [v2-m4-frontend-adaptation.md](./v2-m4-frontend-adaptation.md) | M4 | todo |
@@ -52,7 +52,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 | Req ID | PRD | vN Plan | 单元测试 | E2E 测试 | 证据 | 状态 |
 |--------|-----|---------|----------|----------|------|------|
-| REQ-0001-026 | PRD-0001 §26 | v2-m1-channel-alignment | — | — | — | todo |
+| REQ-0001-026 | PRD-0001 §26 | v2-m1-channel-alignment | `test_channel_service.py` (19 tests) | — | 19 tests passed | ✅ done |
 | REQ-0001-027 | PRD-0001 §27 | v2-m2-agent-alignment | — | — | — | todo |
 | REQ-0001-028 | PRD-0001 §28 | v2-m3-bindings | — | — | — | todo |
 | REQ-0001-029 | PRD-0001 §29 | v2-m4-frontend-adaptation | — | — | — | todo |
@@ -74,10 +74,13 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 ## 当前执行
 
-**v2 规划中** - 等待 v2-m1 开始
+**v2-m1 完成** - Channel 配置对齐已完成
 
-详细设计已完成：
-- Channel 完整模型（多账号、完整字段）
-- Agent 完整模型（Session、Messages、Commands、Compaction）
-- Bindings 配置（route/acp 类型）
-- 同步策略（merge + 管理字段标记）
+完成内容：
+- ✅ `ChannelConfig` 模型：30+ 字段支持（Telegram/WhatsApp/Feishu 完整字段）
+- ✅ `ChannelAccount` 模型：多账号配置支持
+- ✅ `_get_managed_fields()` 方法：标记 SOP Engine 管理的字段
+- ✅ Merge 策略：同步时保留非管理字段
+- ✅ 19 个单元测试全部通过
+
+下一步：v2-m2 Agent 配置对齐
