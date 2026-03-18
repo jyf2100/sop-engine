@@ -29,7 +29,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 | # | 里程碑 | 范围 | DoD | 状态 |
 |---|--------|------|-----|------|
 | M1 | Channel 配置对齐 | REQ-0001-026 | 同步保留非管理字段，多账号可用 | **done** |
-| M2 | Agent 配置对齐 | REQ-0001-027 | Session/Messages/Commands 配置完整 | todo |
+| M2 | Agent 配置对齐 | REQ-0001-027 | Session/Messages/Commands 配置完整 | **done** |
 | M3 | Bindings 支持 | REQ-0001-028 | 多 Agent 路由可用 | todo |
 | M4 | 前端适配 | REQ-0001-029 | 高级配置 Tab 可用 | todo |
 | M5 | E2E 测试完善 | REQ-0001-030 | 所有 E2E 测试通过 | todo |
@@ -41,7 +41,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 | 文件 | 里程碑 | 状态 |
 |------|--------|------|
 | [v2-m1-channel-alignment.md](./v2-m1-channel-alignment.md) | M1 | **done** |
-| [v2-m2-agent-alignment.md](./v2-m2-agent-alignment.md) | M2 | todo |
+| [v2-m2-agent-alignment.md](./v2-m2-agent-alignment.md) | M2 | **done** |
 | [v2-m3-bindings.md](./v2-m3-bindings.md) | M3 | todo |
 | [v2-m4-frontend-adaptation.md](./v2-m4-frontend-adaptation.md) | M4 | todo |
 | [v2-m5-e2e-tests.md](./v2-m5-e2e-tests.md) | M5 | todo |
@@ -53,7 +53,7 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 | Req ID | PRD | vN Plan | 单元测试 | E2E 测试 | 证据 | 状态 |
 |--------|-----|---------|----------|----------|------|------|
 | REQ-0001-026 | PRD-0001 §26 | v2-m1-channel-alignment | `test_channel_service.py` (19 tests) | — | 19 tests passed | ✅ done |
-| REQ-0001-027 | PRD-0001 §27 | v2-m2-agent-alignment | — | — | — | todo |
+| REQ-0001-027 | PRD-0001 §27 | v2-m2-agent-alignment | `test_agent_config_alignment.py` (30 tests) | — | 30 tests passed | ✅ done |
 | REQ-0001-028 | PRD-0001 §28 | v2-m3-bindings | — | — | — | todo |
 | REQ-0001-029 | PRD-0001 §29 | v2-m4-frontend-adaptation | — | — | — | todo |
 | REQ-0001-030 | PRD-0001 §30 | v2-m5-e2e-tests | — | — | — | todo |
@@ -74,13 +74,14 @@ SOP Engine 与 OpenClaw 官方配置规范完全对齐，确保 Channel 和 Agen
 
 ## 当前执行
 
-**v2-m1 完成** - Channel 配置对齐已完成
+**v2-m2 完成** - Agent 配置对齐已完成
 
 完成内容：
-- ✅ `ChannelConfig` 模型：30+ 字段支持（Telegram/WhatsApp/Feishu 完整字段）
-- ✅ `ChannelAccount` 模型：多账号配置支持
-- ✅ `_get_managed_fields()` 方法：标记 SOP Engine 管理的字段
-- ✅ Merge 策略：同步时保留非管理字段
-- ✅ 19 个单元测试全部通过
+- ✅ `SessionConfig` 模型：dm_scope, reset, maintenance, thread_bindings 等完整字段
+- ✅ `MessagesConfig` 模型：queue, inbound, response_prefix, ack_reaction
+- ✅ `CommandsConfig` 模型：native, text, bash, debug, config
+- ✅ Agent 模型更新：添加 session_config, messages_config, commands_config 字段
+- ✅ AgentService 更新：create_agent/update_agent 支持新配置，同步到 openclaw.json
+- ✅ 30 个单元测试全部通过
 
-下一步：v2-m2 Agent 配置对齐
+下一步：v2-m3 Bindings 支持
