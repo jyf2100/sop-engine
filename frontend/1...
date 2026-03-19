@@ -1,0 +1,8 @@
+[2m[WebServer] [22mINFO:     Started server process [98283]
+[2m[WebServer] [22mINFO:     Started server process [98283]
+[2m[WebServer] [22mINFO:     Waiting for application startup.
+[2m[WebServer] [22mINFO:     Application startup complete.
+[2m[WebServer] [22mINFO:     Waiting for application startup.
+[2m[WebServer] [22mINFO:     Application startup complete.
+[2m[WebServer] [22mINFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+[2m[WebServer] [22mINFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
